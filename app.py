@@ -155,34 +155,6 @@ def process_resume(resume_data, job_description):
         "Final Score": final_score
     }
 
-# Save results to CSV
-def save_to_csv(resume_data, job_description, results):
-    """Saves evaluation results to a CSV file."""
-    if not os.path.exists(CSV_PATH):
-        df = pd.DataFrame(columns=[
-            "Resume Data", "Job Description", "Keyword Match", "Section Structure",
-            "Formatting Compliance", "Readability Score", "Grammar Score",
-            "Structure Score", "Vocabulary Score", "Final Score"
-        ])
-    else:
-        df = pd.read_csv(CSV_PATH)
-
-    new_row = pd.DataFrame([{
-        "Resume Data": json.dumps(resume_data),  
-        "Job Description": job_description,
-        "Keyword Match": results["Keyword Match"],
-        "Resume Content Sufficiency Score": results["Section Structure"],
-        "Formatting Compliance": results["Formatting Compliance"],
-        "Readability Score": results["Readability Score"],
-        "Grammar Score": results["Grammar Score"],
-        "Structure Score": results["Structure Score"],
-        "Vocabulary Score": results["Vocabulary Score"],
-        "Final Score": results["Final Score"]
-    }])
-
-    df = pd.concat([df, new_row], ignore_index=True)
-
-    df.to_csv(CSV_PATH, index=False)
 
 # Flask API endpoint
 @app.route('/evaluate-resume', methods=['POST'])
@@ -202,5 +174,5 @@ def evaluate_resume():
 
 # Run the Flask app
 if __name__ == "__main__":
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
